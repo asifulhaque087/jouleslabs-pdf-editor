@@ -1,113 +1,239 @@
-import Image from 'next/image'
+"use client";
 
-export default function Home() {
+import React, { useState, useLayoutEffect } from "react";
+import { BiChevronRight, BiChevronLeft } from "react-icons/bi";
+import { Attachments } from "@/components/Attachments";
+import { Empty } from "@/components/Empty";
+import { MenuBar } from "@/components/MenuBar";
+import { Page } from "@/components/Page";
+import { AttachmentTypes } from "@/entities";
+import { useAttachments } from "@/hooks/useAttachments";
+import { Pdf, usePdf } from "@/hooks/usePdf";
+import { UploadTypes, useUploader } from "@/hooks/useUploader";
+import { DrawingModal } from "@/modals/components/DrawingModal";
+import { HelpModal } from "@/modals/components/HelpModal";
+import { ggID } from "@/utils/helpers";
+import "semantic-ui-css/semantic.min.css";
+
+import { Container, Grid, Button, Segment } from "semantic-ui-react";
+
+const App: React.FC = () => {
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [drawingModalOpen, setDrawingModalOpen] = useState(false);
+  const {
+    file,
+    initialize,
+    pageIndex,
+    isMultiPage,
+    isFirstPage,
+    isLastPage,
+    currentPage,
+    isSaving,
+    savePdf,
+    previousPage,
+    nextPage,
+    setDimensions,
+    name,
+    dimensions,
+  } = usePdf();
+  const {
+    add: addAttachment,
+    allPageAttachments,
+    pageAttachments,
+    reset: resetAttachments,
+    update,
+    remove,
+    setPageIndex,
+  } = useAttachments();
+
+  const initializePageAndAttachments = (pdfDetails: Pdf) => {
+    initialize(pdfDetails);
+    const numberOfPages = pdfDetails.pages.length;
+    resetAttachments(numberOfPages);
+  };
+
+  const {
+    inputRef: pdfInput,
+    handleClick: handlePdfClick,
+    isUploading,
+    onClick,
+    upload: uploadPdf,
+  } = useUploader({
+    use: UploadTypes.PDF,
+    afterUploadPdf: initializePageAndAttachments,
+  });
+
+  const {
+    inputRef: imageInput,
+    handleClick: handleImageClick,
+    onClick: onImageClick,
+    upload: uploadImage,
+  } = useUploader({
+    use: UploadTypes.IMAGE,
+    afterUploadAttachment: addAttachment,
+  });
+
+  const addText = () => {
+    const newTextAttachment: TextAttachment = {
+      id: ggID(),
+      type: AttachmentTypes.TEXT,
+      x: 0,
+      y: 0,
+      width: 120,
+      height: 25,
+      size: 16,
+      lineHeight: 1.4,
+      fontFamily: "Times-Roman",
+      text: "Enter Text Here",
+    };
+    addAttachment(newTextAttachment);
+  };
+
+  const addDrawing = (drawing?: {
+    width: number;
+    height: number;
+    path: string;
+  }) => {
+    if (!drawing) return;
+
+    const newDrawingAttachment: DrawingAttachment = {
+      id: ggID(),
+      type: AttachmentTypes.DRAWING,
+      ...drawing,
+      x: 0,
+      y: 0,
+      scale: 1,
+    };
+    addAttachment(newDrawingAttachment);
+  };
+
+  useLayoutEffect(() => setPageIndex(pageIndex), [pageIndex, setPageIndex]);
+
+  const hiddenInputs = (
+    <>
+      {/* <textarea
+        data-testid="pdf-input"
+        ref={pdfInput}
+        type="file"
+        name="pdf"
+        id="pdf"
+        accept="application/pdf"
+        onChange={uploadPdf}
+        onClick={onClick}
+        style={{ display: "none" }}
+      /> */}
+
+      <input
+        data-testid="pdf-input"
+        ref={pdfInput}
+        type="file"
+        name="pdf"
+        id="pdf"
+        accept="application/pdf"
+        onChange={uploadPdf}
+        onClick={onClick}
+        style={{ display: "none" }}
+      />
+      <input
+        ref={imageInput}
+        type="file"
+        id="image"
+        name="image"
+        accept="image/*"
+        onClick={onImageClick}
+        style={{ display: "none" }}
+        onChange={uploadImage}
+      />
+    </>
+  );
+
+  const handleSavePdf = () => savePdf(allPageAttachments);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="m-[30px]">
+      {hiddenInputs}
+      <MenuBar
+        openHelp={() => setHelpModalOpen(true)}
+        savePdf={handleSavePdf}
+        addText={addText}
+        addImage={handleImageClick}
+        addDrawing={() => setDrawingModalOpen(true)}
+        savingPdfStatus={isSaving}
+        uploadNewPdf={handlePdfClick}
+        isPdfLoaded={!!file}
+      />
+
+      {!file ? (
+        <Empty loading={isUploading} uploadPdf={handlePdfClick} />
+      ) : (
+        <div className="flex items-center justify-center gap-x-[50px]">
+          <div
+            className=""
+            // width={3}
+            // verticalAlign="middle"
+            // textAlign="left"
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            {isMultiPage && !isFirstPage && (
+              // <Button circular icon="angle left" onClick={previousPage} />
+              <button
+                className="w-[36px] h-[36px] rounded-full bg-gray-300 grid place-items-center"
+                onClick={previousPage}
+              >
+                <BiChevronLeft size={20} />
+              </button>
+            )}
+          </div>
+          {/* <Grid.Column width={10}> */}
+          <div className="mt-[30px]">
+            {currentPage && (
+              <div
+                className="shadow-lg border"
+                // data-testid="page"
+                // compact
+                // stacked={isMultiPage && !isLastPage}
+              >
+                <div style={{ position: "relative" }}>
+                  <Page
+                    dimensions={dimensions}
+                    updateDimensions={setDimensions}
+                    page={currentPage}
+                  />
+                  {dimensions && (
+                    <Attachments
+                      pdfName={name}
+                      removeAttachment={remove}
+                      updateAttachment={update}
+                      pageDimensions={dimensions}
+                      attachments={pageAttachments}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          {/* <Grid.Column width={3} verticalAlign="middle" textAlign="right"> */}
+          <div>
+            {isMultiPage && !isLastPage && (
+              // <Button circular icon="angle right" onClick={nextPage} />
+              <button
+                className="w-[36px] h-[36px] rounded-full bg-gray-300 grid place-items-center"
+                onClick={nextPage}
+              >
+                <BiChevronRight size={20} />
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+      <DrawingModal
+        open={drawingModalOpen}
+        dismiss={() => setDrawingModalOpen(false)}
+        confirm={addDrawing}
+      />
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <HelpModal open={helpModalOpen} dismiss={() => setHelpModalOpen(false)} />
+    </div>
+  );
+};
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default App;
