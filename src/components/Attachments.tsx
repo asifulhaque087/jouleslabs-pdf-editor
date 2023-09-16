@@ -23,16 +23,24 @@ export const Attachments: React.FC<Props> = ({
     (index: number) => (attachment: Partial<Attachment>) =>
       updateAttachment(index, attachment);
 
+  // console.log("page dimensions is ", pageDimensions);
+  // console.log("attachments are ", attachments);
+
   return attachments ? (
     <>
       {attachments.length
         ? attachments.map((attachment, index) => {
-            const key = `${pdfName}-${index}`;
+            // const key = `${pdfName}-${index}`;
+            // const key = `${Math.floor(Math.random() * 10000)}`;
+            const key = `${attachment.id}`;
+            // console.log("the key is ", key)
 
             if (attachment.type === AttachmentTypes.IMAGE) {
+              console.log("the key is ", key);
               return (
                 <Image
                   key={key}
+                  // key={`${Math.floor(Math.random() * 10000)}`}
                   pageWidth={pageDimensions.width}
                   pageHeight={pageDimensions.height}
                   removeImage={() => removeAttachment(index)}
@@ -56,6 +64,7 @@ export const Attachments: React.FC<Props> = ({
             }
 
             if (attachment.type === AttachmentTypes.TEXT) {
+              console.log("the key is ", key);
               return (
                 <Text
                   key={key}

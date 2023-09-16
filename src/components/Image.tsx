@@ -1,7 +1,7 @@
-import React, { RefObject } from 'react';
-import { Dimmer } from 'semantic-ui-react';
-import { Div } from '../ui/components/Div';
-import { ConfirmContent } from './ConfirmContent';
+import React, { RefObject } from "react";
+import { Dimmer } from "semantic-ui-react";
+import { Div } from "../ui/components/Div";
+import { ConfirmContent } from "./ConfirmContent";
 
 const ADJUSTERS_DIMENSIONS = 20;
 
@@ -46,23 +46,23 @@ export const Image: React.FC<Props> = ({
       onMouseOut={handleMouseOut}
       onDoubleClick={onClick}
       style={{
-        position: 'absolute',
+        position: "absolute",
         top: positionTop,
         left: positionLeft,
-        borderStyle: 'dashed',
+        borderStyle: "dashed",
         borderWidth: 1,
-        borderColor: 'grey',
+        borderColor: "grey",
         width: width + 2,
         height: height + 2,
-        cursor: 'move',
+        cursor: "move",
       }}
     >
       <Dimmer.Dimmable as={Div} size="medium" dimmed={dimmerActive}>
         <canvas
           ref={canvasRef}
           style={{
-            width: '100%',
-            height: '100%',
+            width: "100%",
+            height: "100%",
           }}
         />
         <Dimmer active={dimmerActive} onClickOutside={cancelDelete}>
@@ -79,8 +79,8 @@ export const Image: React.FC<Props> = ({
         onMouseUp={handleMouseUp}
         onMouseMove={handleImageScale}
         style={{
-          position: 'absolute',
-          cursor: 'nwse-resize',
+          position: "absolute",
+          cursor: "nwse-resize",
           top: -5,
           left: -5,
           width: ADJUSTERS_DIMENSIONS,

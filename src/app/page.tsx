@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { BiChevronRight, BiChevronLeft } from "react-icons/bi";
 import { Attachments } from "@/components/Attachments";
 import { Empty } from "@/components/Empty";
@@ -75,7 +75,7 @@ const App: React.FC = () => {
 
   const addText = () => {
     const newTextAttachment: TextAttachment = {
-      id: ggID(),
+      id: ggID()(),
       type: AttachmentTypes.TEXT,
       x: 0,
       y: 0,
@@ -97,7 +97,7 @@ const App: React.FC = () => {
     if (!drawing) return;
 
     const newDrawingAttachment: DrawingAttachment = {
-      id: ggID(),
+      id: ggID()(),
       type: AttachmentTypes.DRAWING,
       ...drawing,
       x: 0,
@@ -109,20 +109,14 @@ const App: React.FC = () => {
 
   useLayoutEffect(() => setPageIndex(pageIndex), [pageIndex, setPageIndex]);
 
+  // useEffect(() => {
+  //   console.log("hola hola");
+
+  //   setPageIndex(pageIndex);
+  // }, [pageIndex]);
+
   const hiddenInputs = (
     <>
-      {/* <textarea
-        data-testid="pdf-input"
-        ref={pdfInput}
-        type="file"
-        name="pdf"
-        id="pdf"
-        accept="application/pdf"
-        onChange={uploadPdf}
-        onClick={onClick}
-        style={{ display: "none" }}
-      /> */}
-
       <input
         data-testid="pdf-input"
         ref={pdfInput}
@@ -137,7 +131,7 @@ const App: React.FC = () => {
       <input
         ref={imageInput}
         type="file"
-        id="image"
+        // id="image"
         name="image"
         accept="image/*"
         onClick={onImageClick}
@@ -148,6 +142,8 @@ const App: React.FC = () => {
   );
 
   const handleSavePdf = () => savePdf(allPageAttachments);
+
+  // console.log("the  current page is ", currentPage);
 
   return (
     <div className="m-[30px]">
@@ -205,6 +201,7 @@ const App: React.FC = () => {
                       updateAttachment={update}
                       pageDimensions={dimensions}
                       attachments={pageAttachments}
+                      // attachments={allPageAttachments[pageIndex]}
                     />
                   )}
                 </div>

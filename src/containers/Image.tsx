@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { DragActions } from '../entities';
-import { getMovePosition } from '../utils/helpers';
-import { Image as ImageComponent } from '../components/Image';
+import React, { useState, useEffect, useRef } from "react";
+import { DragActions } from "../entities";
+import { getMovePosition } from "../utils/helpers";
+import { Image as ImageComponent } from "../components/Image";
 
 const IMAGE_MAX_SIZE = 300;
 
@@ -42,7 +42,7 @@ export const Image = ({
     setOperation(DragActions.MOVE);
     const directions = event.currentTarget.dataset.direction;
     if (directions) {
-      setDirection(directions.split('-'));
+      setDirection(directions.split("-"));
       setOperation(DragActions.SCALE);
     }
   };
@@ -109,32 +109,34 @@ export const Image = ({
     event.preventDefault();
 
     if (mouseDown) {
-      if (direction.includes('left')) {
+      if (direction.includes("left")) {
         setPositionLeft(positionLeft + event.movementX);
         setCanvasWidth(canvasWidth - event.movementX);
       }
 
-      if (direction.includes('top')) {
+      if (direction.includes("top")) {
         setPositionTop(positionTop + event.movementY);
         setCanvasHeight(canvasHeight - event.movementY);
       }
 
-      if (direction.includes('right')) {
+      if (direction.includes("right")) {
         setCanvasWidth(canvasWidth + event.movementX);
       }
 
-      if (direction.includes('bottom')) {
+      if (direction.includes("bottom")) {
         setCanvasHeight(canvasHeight + event.movementY);
       }
     }
   };
 
   useEffect(() => {
+    console.log("attachments are ", x, y);
+
     const renderImage = (img: HTMLImageElement) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext("2d");
       if (!context) return;
 
       let scale = 1;
@@ -156,6 +158,9 @@ export const Image = ({
       canvas.height = newCanvasHeight;
 
       context.drawImage(img, 0, 0, newCanvasWidth, newCanvasHeight);
+
+      // context.drawImage(img, 0, 0, newCanvasWidth, newCanvasHeight);
+
       canvas.toBlob((blob) => {
         updateImageAttachment({
           file: blob as File,
@@ -166,8 +171,10 @@ export const Image = ({
     };
 
     renderImage(img);
-  }, [img, canvasWidth, canvasHeight, updateImageAttachment]);
-
+    // }, [img, canvasWidth, canvasHeight, updateImageAttachment]);
+  }, [canvasWidth, canvasHeight, img, x, y]);
+  // }, []);
+  positionLeft;
   const handleClick = () => setDimmerActive(true);
   const onCancelDelete = () => setDimmerActive(false);
 

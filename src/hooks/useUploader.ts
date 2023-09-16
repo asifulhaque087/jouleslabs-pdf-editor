@@ -34,7 +34,7 @@ const handlers = {
     try {
       const url = await readAsDataURL(file);
       const img = await readAsImage(url as string);
-      const id = ggID();
+      const id = ggID()();
       const { width, height } = img;
 
       const imageAttachemnt: ImageAttachment = {
@@ -153,7 +153,7 @@ export const useUploader = ({
     }
 
     if (use === UploadTypes.IMAGE && afterUploadAttachment) {
-      console.log("===> was this also called");
+      console.log("===> was this also called ");
       afterUploadAttachment(result as ImageAttachment);
     }
     setIsUploading(false);

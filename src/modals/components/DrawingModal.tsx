@@ -1,6 +1,6 @@
-import React, { useState, createRef, useEffect } from 'react';
-import { Modal, Button, Menu, Dropdown, Label } from 'semantic-ui-react';
-import { Color } from '../../entities';
+import React, { useState, createRef, useEffect } from "react";
+import { Modal, Button, Menu, Dropdown, Label } from "semantic-ui-react";
+import { Color } from "../../entities";
 
 interface Props {
   open: boolean;
@@ -18,7 +18,7 @@ interface Props {
 export const DrawingModal = ({ open, dismiss, confirm, drawing }: Props) => {
   const svgRef = createRef<SVGSVGElement>();
   const [paths, setPaths] = useState<Array<[string, number, number]>>([]);
-  const [path, setPath] = useState((drawing && drawing.path) || '');
+  const [path, setPath] = useState((drawing && drawing.path) || "");
   const [svgX, setSvgX] = useState(0);
   const [svgY, setSvgY] = useState(0);
   const [minX, setMinX] = useState(Infinity);
@@ -49,7 +49,7 @@ export const DrawingModal = ({ open, dismiss, confirm, drawing }: Props) => {
     setMinY(Math.min(minY, y));
     setMaxY(Math.max(maxY, y));
     setPath(path + `M${x},${y}`);
-    setPaths([...paths, ['M', x, y]]);
+    setPaths([...paths, ["M", x, y]]);
   };
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -63,7 +63,7 @@ export const DrawingModal = ({ open, dismiss, confirm, drawing }: Props) => {
     setMinY(Math.min(minY, y));
     setMaxY(Math.max(maxY, y));
     setPath(path + `L${x},${y}`);
-    setPaths([...paths, ['L', x, y]]);
+    setPaths([...paths, ["L", x, y]]);
   };
 
   const handleMouseUp = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -73,7 +73,7 @@ export const DrawingModal = ({ open, dismiss, confirm, drawing }: Props) => {
 
   const resetDrawingBoard = () => {
     setPaths([]);
-    setPath('');
+    setPath("");
     setMinX(Infinity);
     setMaxX(0);
     setMinY(Infinity);
@@ -102,7 +102,7 @@ export const DrawingModal = ({ open, dismiss, confirm, drawing }: Props) => {
       path: paths.reduce(
         (fullPath, lineItem) =>
           `${fullPath}${lineItem[0]}${lineItem[1] + dx}, ${lineItem[2] + dy}`,
-        ''
+        ""
       ),
     });
 
@@ -153,16 +153,13 @@ export const DrawingModal = ({ open, dismiss, confirm, drawing }: Props) => {
               <Dropdown.Menu open={strokeDropdownOpen}>
                 <div
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
                     padding: 5,
                   }}
                 >
                   {Object.values(Color).map((color, index) => (
-                    <div 
-                      style={{ margin: 2.5 }} 
-                      key={index}
-                    >
+                    <div style={{ margin: 2.5 }} key={index}>
                       <Label
                         color={color}
                         onClick={handleStrokeSelect(color)}
@@ -191,8 +188,8 @@ export const DrawingModal = ({ open, dismiss, confirm, drawing }: Props) => {
           <svg
             ref={svgRef}
             style={{
-              width: '100%',
-              height: '50vh',
+              width: "100%",
+              height: "50vh",
             }}
           >
             <path

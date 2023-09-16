@@ -1,11 +1,11 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useCallback } from "react";
 
 enum ActionType {
-  RESET = 'RESET',
-  ADD_ATTACHMENT = 'ADD_ATTACHMENT',
-  REMOVE_ATTACHMENT = 'REMOVE_ATTACHMENT',
-  UPDATE_ATTACHMENT = 'UPDATE_ATTACHMENT',
-  UPDATE_PAGE_INDEX = 'UPDATE_PAGE_INDEX',
+  RESET = "RESET",
+  ADD_ATTACHMENT = "ADD_ATTACHMENT",
+  REMOVE_ATTACHMENT = "REMOVE_ATTACHMENT",
+  UPDATE_ATTACHMENT = "UPDATE_ATTACHMENT",
+  UPDATE_PAGE_INDEX = "UPDATE_PAGE_INDEX",
 }
 
 interface State {
@@ -81,6 +81,8 @@ const reducer = (state: State, action: Action) => {
               )
             : otherPageAttachments
       );
+
+      // console.log("this is updated component ", newAllPageAttachmentsUpdate);
 
       return {
         ...state,

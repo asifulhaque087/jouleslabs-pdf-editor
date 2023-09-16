@@ -6,7 +6,8 @@ interface Position {
 export function ggID(): () => number {
   let id = 0;
   return function genId() {
-    return id++;
+    // return id++;
+    return Math.floor(Math.random() * 10000);
   };
 }
 
@@ -20,6 +21,9 @@ export const getMovePosition = (
   pageWidth: number,
   pageHeight: number
 ): Position => {
+  // console.log("old x is ", dragX);
+  // console.log("new x is ", x);
+
   const newPositionTop = y + dragY;
   const newPositionLeft = x + dragX;
   const newPositionRight = newPositionLeft + width;

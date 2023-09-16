@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
-import { Text as Component } from '../components/Text';
-import { getMovePosition } from '../utils/helpers';
-import { DragActions, TextMode } from '../entities';
+"use client";
+
+import React, { useState, useRef } from "react";
+import { Text as Component } from "../components/Text";
+import { getMovePosition } from "../utils/helpers";
+import { DragActions, TextMode } from "../entities";
 
 interface Props {
   pageWidth: number;
@@ -23,7 +25,7 @@ export const Text = ({
   updateTextAttachment,
 }: TextAttachment & Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [content, setContent] = useState(text || '');
+  const [content, setContent] = useState(text || "");
   const [mouseDown, setMouseDown] = useState(false);
   const [positionTop, setPositionTop] = useState(y);
   const [positionLeft, setPositionLeft] = useState(x);
@@ -51,6 +53,8 @@ export const Text = ({
       setPositionLeft(left);
     }
   };
+
+  // console.log("update text attachment function ", updateTextAttachment);
 
   const handleMousedown = (event: React.MouseEvent<HTMLDivElement>) => {
     if (textMode !== TextMode.COMMAND) {
@@ -140,6 +144,8 @@ export const Text = ({
     const value = event.currentTarget.value;
     setContent(value);
   };
+
+  // console.log("from middle ", positionLeft, positionTop)
 
   return (
     <Component
