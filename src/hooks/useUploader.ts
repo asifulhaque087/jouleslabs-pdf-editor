@@ -6,6 +6,7 @@ import { ggID } from "../utils/helpers";
 import { Pdf } from "./usePdf";
 import { AttachmentTypes } from "../entities";
 import toast from "react-hot-toast";
+import { mergePdfFiles } from "@/utils/pdf";
 
 type ActionEvent<T> = React.TouchEvent<T> | React.MouseEvent<T>;
 
@@ -135,12 +136,15 @@ export const useUploader = ({
       return;
     }
 
-    const file = files[0];
+    let file = files[0];
+
+    if (use === UploadTypes.PDF) {
+      file = await mergePdfFiles(Array.from(files).map((file: File) => file));
+    }
 
     // Check if the file size is greater than 1 MB (1 MB = 1024 * 1024 bytes)
     if (file.size > 1024 * 1024) {
       // File size exceeds 1 MB, handle this case (e.g., show an error message).
-      // console.log("File size exceeds 1 MB.");
       toast.error("File size exceeds 1 MB.");
       setIsUploading(false);
       return;

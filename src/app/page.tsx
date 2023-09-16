@@ -119,6 +119,7 @@ const App: React.FC = () => {
     <>
       <input
         data-testid="pdf-input"
+        multiple={true}
         ref={pdfInput}
         type="file"
         name="pdf"
