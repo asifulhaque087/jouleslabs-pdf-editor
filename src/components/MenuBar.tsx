@@ -11,6 +11,7 @@ interface Props {
   isPdfLoaded: boolean;
   savingPdfStatus: boolean;
   savePdf: () => void;
+  previewPdf: () => void;
 }
 
 export const MenuBar: React.FC<Props> = ({
@@ -22,6 +23,7 @@ export const MenuBar: React.FC<Props> = ({
   isPdfLoaded,
   savingPdfStatus,
   savePdf,
+  previewPdf,
 }) => {
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -56,6 +58,11 @@ export const MenuBar: React.FC<Props> = ({
     {
       title: "Add drawing",
       handleClick: addDrawing,
+    },
+
+    {
+      title: "preview",
+      handleClick: previewPdf,
     },
 
     {

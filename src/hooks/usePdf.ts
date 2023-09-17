@@ -1,5 +1,7 @@
-import { useState, useCallback } from "react";
-import { save } from "../utils/pdf";
+"use client";
+
+import { useState, useCallback, createRef } from "react";
+import { save, saveAndPreview } from "../utils/pdf";
 
 export interface Pdf {
   name: string;
@@ -17,6 +19,10 @@ export const usePdf = () => {
   const [isFirstPage, setIsFirstPage] = useState(false);
   const [isLastPage, setIsLastPage] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  // const previewRef = createRef<HTMLInputElement>();
+  const previewRef = createRef<HTMLIFrameElement>();
+
   const currentPage = pages[pageIndex];
 
   const setDimensionsHandler = useCallback(setDimensions, [setDimensions]);
@@ -60,6 +66,18 @@ export const usePdf = () => {
     }
   };
 
+  const previewPdf = async (attachments: Attachments[]) => {
+    if (!file) return;
+
+    try {
+      await saveAndPreview(file, attachments, name, previewRef.current!);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      // setIsSaving(false);
+    }
+  };
+
   return {
     currentPage,
     dimensions,
@@ -73,11 +91,13 @@ export const usePdf = () => {
     nextPage,
     pages,
     savePdf,
+    previewPdf,
     initialize,
     isMultiPage,
     previousPage,
     isFirstPage,
     isLastPage,
     isSaving,
+    previewRef,
   };
 };

@@ -16,10 +16,12 @@ import { ggID } from "@/utils/helpers";
 import "semantic-ui-css/semantic.min.css";
 
 import { Container, Grid, Button, Segment } from "semantic-ui-react";
+import Preview from "@/components/Preview";
 
 const App: React.FC = () => {
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [drawingModalOpen, setDrawingModalOpen] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
   const {
     file,
     initialize,
@@ -30,11 +32,13 @@ const App: React.FC = () => {
     currentPage,
     isSaving,
     savePdf,
+    previewPdf,
     previousPage,
     nextPage,
     setDimensions,
     name,
     dimensions,
+    previewRef,
   } = usePdf();
   const {
     add: addAttachment,
@@ -144,6 +148,12 @@ const App: React.FC = () => {
 
   const handleSavePdf = () => savePdf(allPageAttachments);
 
+  const handlePreviewPdf = () => {
+    setIsPreview(true);
+
+    previewPdf(allPageAttachments);
+  };
+
   // console.log("the  current page is ", currentPage);
 
   return (
@@ -152,6 +162,7 @@ const App: React.FC = () => {
       <MenuBar
         openHelp={() => setHelpModalOpen(true)}
         savePdf={handleSavePdf}
+        previewPdf={handlePreviewPdf}
         addText={addText}
         addImage={handleImageClick}
         addDrawing={() => setDrawingModalOpen(true)}
@@ -223,6 +234,14 @@ const App: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* {isPreview && ( */}
+      <div className="py-[100px]">
+        {/* <div>this is preview page</div> */}
+        <Preview previewRef={previewRef} />
+      </div>
+      {/* )} */}
+
       <DrawingModal
         open={drawingModalOpen}
         dismiss={() => setDrawingModalOpen(false)}
