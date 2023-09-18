@@ -159,7 +159,8 @@ const App: React.FC = () => {
   useLayoutEffect(() => setPageIndex(pageIndex), [pageIndex, setPageIndex]);
 
   const modifyPdf = async () => {
-    const filePath = "/merged.pdf";
+    // const filePath = "/merged.pdf";
+    const filePath = "/hello.pdf";
     const response = await fetch(filePath);
 
     const fileBlob = await response.blob();
