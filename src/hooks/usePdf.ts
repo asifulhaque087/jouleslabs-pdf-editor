@@ -6,6 +6,7 @@ import { save, saveAndPreview } from "../utils/pdf";
 export interface Pdf {
   name: string;
   file: File;
+  pageIndex?: number;
   pages: Promise<any>[];
 }
 
@@ -41,15 +42,15 @@ export const usePdf = () => {
     setIsLastPage(newPageIndex === pages.length - 1);
   };
 
-  const initialize = ({ name, file, pages: _pages }: Pdf) => {
+  const initialize = ({ name, file, pages: _pages, pageIndex = 0 }: Pdf) => {
     const multi = _pages.length > 1;
     setName(name);
     setFile(file);
     setPages(_pages);
-    setPageIndex(0);
+    setPageIndex(pageIndex);
     setIsMultiPage(multi);
-    setIsFirstPage(true);
-    setIsLastPage(_pages.length === 1);
+    // setIsFirstPage(true);
+    // setIsLastPage(_pages.length === 1);
   };
 
   const savePdf = async (attachments: Attachments[]) => {
