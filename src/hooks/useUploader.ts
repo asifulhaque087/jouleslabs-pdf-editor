@@ -127,6 +127,27 @@ export const useUploader = ({
   //   return;
   // };
 
+  const saveFile = async (file: File) => {
+    // e.preventDefault();
+    if (!file) return;
+
+    try {
+      const data = new FormData();
+      data.set("file", file);
+
+      const res = await fetch("/api/pdfs", {
+        method: "POST",
+        body: data,
+      });
+      // handle the error
+      if (!res.ok) throw new Error(await res.text());
+      // localStorage.removeItem("attachs");
+    } catch (e: any) {
+      // Handle errors here
+      console.error(e);
+    }
+  };
+
   const upload = async (
     event: React.ChangeEvent<HTMLInputElement> & { dataTransfer?: DataTransfer }
   ) => {
@@ -164,6 +185,8 @@ export const useUploader = ({
       const base64String = await getBase64(result.file);
 
       const { file, name, pages, pageIndex } = result as Pdf;
+
+      await saveFile(file);
 
       const pdfDetails = {
         file: base64String,
