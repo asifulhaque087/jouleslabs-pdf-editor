@@ -12,11 +12,14 @@ import { Pdf, usePdf } from "@/hooks/usePdf";
 import { UploadTypes, useUploader } from "@/hooks/useUploader";
 import { DrawingModal } from "@/modals/components/DrawingModal";
 import { HelpModal } from "@/modals/components/HelpModal";
-import { ggID } from "@/utils/helpers";
+import { base64StringToFile, ggID } from "@/utils/helpers";
 import "semantic-ui-css/semantic.min.css";
 
 import { Container, Grid, Button, Segment } from "semantic-ui-react";
 import Preview from "@/components/Preview";
+import { readAsPDF } from "@/utils/asyncReader";
+import { getAsset, prepareAssets } from "@/utils/prepareAssets";
+import { PDFDocument, StandardFonts, degrees, rgb } from "pdf-lib";
 
 const App: React.FC = () => {
   const [helpModalOpen, setHelpModalOpen] = useState(false);
@@ -48,12 +51,53 @@ const App: React.FC = () => {
     update,
     remove,
     setPageIndex,
+    initAttachs,
   } = useAttachments();
 
   const initializePageAndAttachments = (pdfDetails: Pdf) => {
     initialize(pdfDetails);
+
     const numberOfPages = pdfDetails.pages.length;
-    resetAttachments(numberOfPages);
+    // resetAttachments(numberOfPages);
+
+    const attachs = localStorage.getItem("attachs")
+      ? JSON.parse(localStorage.getItem("attachs")!)
+      : undefined;
+
+    // console.log("attachs are from localstorage ", attachs);
+
+    // attachs.pageAttachments.
+
+    initAttachs({
+      //   allPageAttachments: [],
+      //   pageAttachments: [],
+      //   pageIndex: -1,
+
+      // allPageAttachments:
+      //   attachs?.allPageAttachments || Array(numberOfPages).fill([]),
+      // pageAttachments: attachs?.pageAttachments || [],
+      // pageIndex: attachs?.pageIndex || -1,
+
+      pageIndex: attachs?.pageIndex || -1,
+      allPageAttachments:
+        attachs?.allPageAttachments.map((page) => {
+          return page.map((attach) => {
+            if (attach.type === "image") {
+              const modifiedFile = base64StringToFile(attach.file, "img1");
+              return { ...attach, file: modifiedFile };
+            }
+            return attach;
+          });
+        }) || Array(numberOfPages).fill([]),
+      pageAttachments:
+        attachs?.pageAttachments.map((attach) => {
+          if (attach.type === "image") {
+            const modifiedFile = base64StringToFile(attach.file, "img2");
+            return { ...attach, file: modifiedFile };
+          }
+          return attach;
+        }) || [],
+    });
   };
 
   const {
@@ -62,6 +106,7 @@ const App: React.FC = () => {
     isUploading,
     onClick,
     upload: uploadPdf,
+    pdfUpload,
   } = useUploader({
     use: UploadTypes.PDF,
     afterUploadPdf: initializePageAndAttachments,
@@ -113,11 +158,31 @@ const App: React.FC = () => {
 
   useLayoutEffect(() => setPageIndex(pageIndex), [pageIndex, setPageIndex]);
 
-  // useEffect(() => {
-  //   console.log("hola hola");
+  const modifyPdf = async () => {
+    const filePath = "/merged.pdf";
+    const response = await fetch(filePath);
 
-  //   setPageIndex(pageIndex);
-  // }, [pageIndex]);
+    const fileBlob = await response.blob();
+
+    // Create a File object from the Blob
+    const file = new File([fileBlob], "merged.pdf", {
+      type: "application/pdf",
+    });
+
+    pdfUpload(file);
+  };
+
+  useEffect(() => {
+    console.log("pages are ", currentPage);
+    // local storage a data thakle get hobe akane
+    // prepareAssets();
+
+    modifyPdf();
+
+    // handle
+
+    // processStore();
+  }, []);
 
   const hiddenInputs = (
     <>
@@ -155,6 +220,7 @@ const App: React.FC = () => {
   };
 
   // console.log("the  current page is ", currentPage);
+  // console.log("the  attachs are ", allPageAttachments);
 
   return (
     <div className="m-[30px]">
