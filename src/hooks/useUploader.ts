@@ -2,7 +2,7 @@
 
 import React, { useState, createRef } from "react";
 import { readAsPDF, readAsDataURL, readAsImage } from "../utils/asyncReader";
-import { ggID } from "../utils/helpers";
+import { getBase64, ggID } from "../utils/helpers";
 import { Pdf } from "./usePdf";
 import { AttachmentTypes } from "../entities";
 import toast from "react-hot-toast";
@@ -35,17 +35,23 @@ const handlers = {
     try {
       const url = await readAsDataURL(file);
       const img = await readAsImage(url as string);
-      const id = ggID()();
       const { width, height } = img;
+
+      const id = ggID()();
 
       const imageAttachemnt: ImageAttachment = {
         id,
         type: AttachmentTypes.IMAGE,
+
+        // img,
         width,
         height,
+
+        img: "",
+        // width: 0,
+        // height: 0,
         x: 0,
         y: 0,
-        img,
         file,
       };
       return imageAttachemnt;
@@ -153,6 +159,20 @@ export const useUploader = ({
     const result = await handlers[use](file);
 
     if (use === UploadTypes.PDF && afterUploadPdf) {
+      // localStorage.setItem("pdf", JSON.stringify(result));
+      console.log("the res is ", result);
+      const base64String = await getBase64(result.file);
+
+      const { file, name, pages, pageIndex } = result as Pdf;
+
+      const pdfDetails = {
+        file: base64String,
+        name,
+        // pages,
+        pageIndex,
+      };
+
+      // localStorage.setItem("pdfDetails", JSON.stringify(pdfDetails));
       afterUploadPdf(result as Pdf);
     }
 
@@ -164,7 +184,40 @@ export const useUploader = ({
     return;
   };
 
+  const pdfUpload = async (file: File) => {
+    const result = await handlers[use](file);
+
+    if (use === UploadTypes.PDF && afterUploadPdf) {
+      // localStorage.setItem("pdf", JSON.stringify(result));
+      // console.log("the res is ", result);
+      const base64String = await getBase64(result.file);
+
+      const { file, name, pages, pageIndex } = result as Pdf;
+
+      const pdfDetails = {
+        file: base64String,
+        name,
+        // pages,
+        pageIndex,
+      };
+
+      // localStorage.setItem("pdfDetails", JSON.stringify(pdfDetails));
+      afterUploadPdf(result as Pdf);
+    }
+  };
+
+  const imgUpload = async (file: File) => {
+    const result = await handlers[use](file);
+
+    if (use === UploadTypes.IMAGE && afterUploadAttachment) {
+      console.log("===> was this also called ");
+      afterUploadAttachment(result as ImageAttachment);
+    }
+    setIsUploading(false);
+  };
+
   return {
+    pdfUpload,
     upload,
     onClick,
     inputRef,
