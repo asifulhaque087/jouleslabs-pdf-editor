@@ -1,7 +1,10 @@
+"use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { DragActions } from "../entities";
 import { getMovePosition } from "../utils/helpers";
 import { Image as ImageComponent } from "../components/Image";
+import { readAsDataURL, readAsImage } from "@/utils/asyncReader";
 
 const IMAGE_MAX_SIZE = 300;
 
@@ -16,6 +19,7 @@ export const Image = ({
   x,
   y,
   img,
+  file,
   width,
   height,
   pageWidth,
@@ -24,6 +28,8 @@ export const Image = ({
   updateImageAttachment,
 }: ImageAttachment & Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // const [img, setImg] = useState<Promise<HTMLImageElement>>();
+  // const [img, setImg] = useState<HTMLImageElement>();
   const [canvasWidth, setCanvasWidth] = useState(width);
   const [canvasHeight, setCanvasHeight] = useState(height);
   const [mouseDown, setMouseDown] = useState(false);
@@ -93,6 +99,7 @@ export const Image = ({
       updateImageAttachment({
         x: positionLeft,
         y: positionTop,
+        // file: file,
       });
     }
 
@@ -129,8 +136,21 @@ export const Image = ({
     }
   };
 
+  // const processImage = async () => {
+  //   const url = await readAsDataURL(file);
+  //   const img = await readAsImage(url as string);
+  //   // setImg(img);
+  //   const { width, height } = img;
+  // };
+
+  // useEffect(() => {
+  //   console.log("I run first");
+  //   processImage();
+  // }, []);
+
   useEffect(() => {
-    console.log("attachments are ", x, y);
+    console.log("I run second");
+    // console.log("attachments are ", x, y);
 
     const renderImage = (img: HTMLImageElement) => {
       const canvas = canvasRef.current;
@@ -170,7 +190,7 @@ export const Image = ({
       });
     };
 
-    renderImage(img);
+    renderImage(img!);
     // }, [img, canvasWidth, canvasHeight, updateImageAttachment]);
   }, [canvasWidth, canvasHeight, img, x, y]);
   // }, []);
