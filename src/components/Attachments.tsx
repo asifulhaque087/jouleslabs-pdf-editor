@@ -1,8 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import { AttachmentTypes } from "../entities";
 import { Image } from "../containers/Image";
 import { Drawing } from "../containers/Drawing";
 import { Text } from "../containers/Text";
+import { readAsDataURL, readAsImage } from "@/utils/asyncReader";
+import ImageWraper from "./ImageWraper";
 
 interface Props {
   attachments: Attachment[];
@@ -26,6 +30,18 @@ export const Attachments: React.FC<Props> = ({
   // console.log("page dimensions is ", pageDimensions);
   // console.log("attachments are ", attachments);
 
+  // const processImage = async () => {
+  //   const url = await readAsDataURL(attachments.file);
+  //   const img = await readAsImage(url as string);
+  //   // setImg(img);
+  //   const { width, height } = img;
+  // };
+
+  // useEffect(() => {
+  //   // console.log("I run first");
+  //   processImage();
+  // }, []);
+
   return attachments ? (
     <>
       {attachments.length
@@ -36,11 +52,14 @@ export const Attachments: React.FC<Props> = ({
             // console.log("the key is ", key)
 
             if (attachment.type === AttachmentTypes.IMAGE) {
-              console.log("the key is ", key);
+              console.log("the image is ", attachment);
+
+              // const url = await readAsDataURL(file);
+              // const img = await readAsImage(url as string);
+
               return (
-                <Image
+                <ImageWraper
                   key={key}
-                  // key={`${Math.floor(Math.random() * 10000)}`}
                   pageWidth={pageDimensions.width}
                   pageHeight={pageDimensions.height}
                   removeImage={() => removeAttachment(index)}
@@ -48,6 +67,18 @@ export const Attachments: React.FC<Props> = ({
                   {...(attachment as ImageAttachment)}
                 />
               );
+
+              // return (
+              //   <Image
+              //     key={key}
+              //     // key={`${Math.floor(Math.random() * 10000)}`}
+              //     pageWidth={pageDimensions.width}
+              //     pageHeight={pageDimensions.height}
+              //     removeImage={() => removeAttachment(index)}
+              //     updateImageAttachment={handleAttachmentUpdate(index)}
+              //     {...(attachment as ImageAttachment)}
+              //   />
+              // );
             }
 
             if (attachment.type === AttachmentTypes.DRAWING) {
