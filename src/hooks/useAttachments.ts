@@ -1,7 +1,11 @@
+"use client";
+
+import { convertToBase64, getBase64 } from "@/utils/helpers";
 import { useReducer, useCallback } from "react";
 
 enum ActionType {
   RESET = "RESET",
+  INIT = "INIT",
   ADD_ATTACHMENT = "ADD_ATTACHMENT",
   REMOVE_ATTACHMENT = "REMOVE_ATTACHMENT",
   UPDATE_ATTACHMENT = "UPDATE_ATTACHMENT",
@@ -23,7 +27,8 @@ type Action =
       attachmentIndex: number;
       attachment: Partial<Attachment>;
     }
-  | { type: ActionType.RESET; numberOfPages: number };
+  | { type: ActionType.RESET; numberOfPages: number }
+  | { type: ActionType.INIT; data: State };
 
 const initialState: State = {
   pageIndex: -1,
@@ -36,6 +41,7 @@ const reducer = (state: State, action: Action) => {
 
   switch (action.type) {
     case ActionType.ADD_ATTACHMENT: {
+      // console.log("ajfdfasldf fslja")
       const newAllPageAttachmentsAdd = allPageAttachments.map(
         (attachments, index) =>
           pageIndex === index
@@ -43,7 +49,45 @@ const reducer = (state: State, action: Action) => {
             : attachments
       );
 
+      const processAttachs = async () => {
+        let attachs = localStorage.getItem("attachs")
+          ? JSON.parse(localStorage.getItem("attachs")!)
+          : undefined;
+
+        if (!attachs) {
+          attachs = { ...state };
+        }
+
+        const tempAttach = {
+          ...action.attachment,
+        };
+
+        if (tempAttach.type === "image") {
+          tempAttach.file = await getBase64(tempAttach.file);
+          // tempAttach.file = convertToBase64(tempAttach.file);
+        }
+
+        const localStore = attachs.allPageAttachments.map(
+          (attachments, index) =>
+            pageIndex === index ? [...attachments, tempAttach] : attachments
+        );
+
+        const newObj = {
+          ...attachs,
+          pageIndex,
+          allPageAttachments: localStore,
+          pageAttachments: localStore[pageIndex],
+        };
+
+        localStorage.setItem("attachs", JSON.stringify(newObj));
+      };
+
+      processAttachs();
+
       return {
+        // ...state,
+        // allPageAttachments: newObj.allPageAttachments,
+        // pageAttachments: newObj.pageAttachments,
         ...state,
         allPageAttachments: newAllPageAttachmentsAdd,
         pageAttachments: newAllPageAttachmentsAdd[pageIndex],
@@ -67,6 +111,7 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case ActionType.UPDATE_ATTACHMENT: {
+      console.log("i am update");
       if (pageIndex === -1) {
         return state;
       }
@@ -82,7 +127,37 @@ const reducer = (state: State, action: Action) => {
             : otherPageAttachments
       );
 
-      // console.log("this is updated component ", newAllPageAttachmentsUpdate);
+      const attachs = localStorage.getItem("attachs")
+        ? JSON.parse(localStorage.getItem("attachs")!)
+        : undefined;
+
+      if (attachs) {
+        const localStore = attachs.allPageAttachments.map(
+          (otherPageAttachments, index) =>
+            pageIndex === index
+              ? attachs.pageAttachments.map((oldAttachment, _attachmentIndex) =>
+                  _attachmentIndex === action.attachmentIndex
+                    ? {
+                        ...oldAttachment,
+                        ...action.attachment,
+                        file: oldAttachment.file,
+                      }
+                    : oldAttachment
+                )
+              : otherPageAttachments
+        );
+
+        const newObj = {
+          ...attachs,
+          pageIndex,
+          allPageAttachments: localStore,
+          pageAttachments: localStore[pageIndex],
+        };
+
+        localStorage.setItem("attachs", JSON.stringify(newObj));
+
+        // console.log("local store is ", localStore);
+      }
 
       return {
         ...state,
@@ -104,6 +179,15 @@ const reducer = (state: State, action: Action) => {
         allPageAttachments: Array(action.numberOfPages).fill([]),
       };
     }
+
+    case ActionType.INIT: {
+      return {
+        // pageIndex: 0,
+        // pageAttachments: [],
+        // allPageAttachments: Array(action.numberOfPages).fill([]),
+        ...action.data,
+      };
+    }
     default: {
       return state;
     }
@@ -113,6 +197,8 @@ const reducer = (state: State, action: Action) => {
 export const useAttachments = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { allPageAttachments, pageAttachments } = state;
+
+  // console.log("from attach ", allPageAttachments, pageAttachments);
 
   const add = (newAttachment: Attachment) =>
     dispatch({ type: ActionType.ADD_ATTACHMENT, attachment: newAttachment });
@@ -130,6 +216,9 @@ export const useAttachments = () => {
   const reset = (numberOfPages: number) =>
     dispatch({ type: ActionType.RESET, numberOfPages });
 
+  const initAttachs = (data: State) =>
+    dispatch({ type: ActionType.INIT, data });
+
   const setPageIndex = useCallback(
     (index: number) =>
       dispatch({ type: ActionType.UPDATE_PAGE_INDEX, pageIndex: index }),
@@ -138,6 +227,7 @@ export const useAttachments = () => {
 
   return {
     add,
+    initAttachs,
     reset,
     remove,
     update,
