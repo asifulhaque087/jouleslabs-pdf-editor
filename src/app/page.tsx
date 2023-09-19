@@ -309,11 +309,32 @@ const App: React.FC = () => {
       </div>
       {/* )} */}
 
-      <DrawingModal
+      {/* previewModal */}
+
+      <div
+        className={`fixed top-0 bottom-0 left-0 right-0 bg-green-500 ${
+          isPreview ? "block" : "hidden"
+        } `}
+      >
+        <div className="p-[5px]">
+          <button
+            className="rounded px-[8px] py-[8px] border border-red-500 text-red-500 outline-none"
+            data-testid="empty-screen-upload-pdf-btn"
+            onClick={() => setIsPreview(false)}
+          >
+            escape preview
+          </button>
+        </div>
+        <div className="flex justify-center w-full h-full">
+          <Preview previewRef={previewRef} />
+        </div>
+      </div>
+
+      {/* <DrawingModal
         open={drawingModalOpen}
         dismiss={() => setDrawingModalOpen(false)}
         confirm={addDrawing}
-      />
+      /> */}
 
       <HelpModal open={helpModalOpen} dismiss={() => setHelpModalOpen(false)} />
     </div>
