@@ -117,6 +117,19 @@ export const useUploader = ({
     }
   };
 
+  const removeFile = async () => {
+    try {
+      const res = await fetch("/api/pdfs", {
+        method: "DELETE",
+      });
+      // handle the error
+      if (!res.ok) throw new Error(await res.text());
+    } catch (e: any) {
+      // Handle errors here
+      console.error(e);
+    }
+  };
+
   const upload = async (
     event: React.ChangeEvent<HTMLInputElement> & { dataTransfer?: DataTransfer }
   ) => {
@@ -215,5 +228,6 @@ export const useUploader = ({
     inputRef,
     isUploading,
     handleClick,
+    removeFile
   };
 };
