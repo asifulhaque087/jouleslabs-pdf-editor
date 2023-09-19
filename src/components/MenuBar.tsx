@@ -12,6 +12,7 @@ interface Props {
   savingPdfStatus: boolean;
   savePdf: () => void;
   previewPdf: () => void;
+  deletePdf: () => void;
 }
 
 export const MenuBar: React.FC<Props> = ({
@@ -24,6 +25,7 @@ export const MenuBar: React.FC<Props> = ({
   savingPdfStatus,
   savePdf,
   previewPdf,
+  deletePdf,
 }) => {
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -73,6 +75,11 @@ export const MenuBar: React.FC<Props> = ({
     {
       title: "upload new",
       handleClick: uploadNewPdf,
+    },
+
+    {
+      title: "Delete pdf",
+      handleClick: deletePdf,
     },
 
     {

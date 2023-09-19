@@ -43,6 +43,7 @@ const App: React.FC = () => {
     name,
     dimensions,
     previewRef,
+    resetPdf,
   } = usePdf();
   const {
     add: addAttachment,
@@ -122,6 +123,16 @@ const App: React.FC = () => {
     use: UploadTypes.IMAGE,
     afterUploadAttachment: addAttachment,
   });
+
+  const deletePdf = () => {
+    localStorage.clear();
+    resetPdf();
+    initAttachs({
+      allPageAttachments: [],
+      pageAttachments: [],
+      pageIndex: -1,
+    });
+  };
 
   const addText = () => {
     const newTextAttachment: TextAttachment = {
@@ -230,6 +241,7 @@ const App: React.FC = () => {
 
       <div className="p-[30px]">
         <MenuBar
+          deletePdf={deletePdf}
           openHelp={() => setHelpModalOpen(true)}
           savePdf={handleSavePdf}
           previewPdf={handlePreviewPdf}
