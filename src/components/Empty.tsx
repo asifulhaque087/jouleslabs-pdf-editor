@@ -1,28 +1,21 @@
-import React from "react";
-import { Segment, Header, Icon, Button } from "semantic-ui-react";
-
+"use client";
+import { AiOutlineFilePdf } from "react-icons/ai";
 interface Props {
   loading: boolean;
   uploadPdf: () => void;
 }
 export const Empty: React.FC<Props> = ({ loading, uploadPdf }) => (
-  <div
-    className="h-[80vh]"
-    // data-testid="empty-container"
-    // placeholder
-    // loading={loading}
-    // style={{ height: "80vh" }}
-  >
-    <div>
-      {/* <Icon name="file pdf outline" /> */}
-      Upload your PDF to start editing!
-    </div>
+  <div className="h-[100vh] grid place-items-center">
     <button
-      className="rounded px-[8px] py-[16px] bg-indigo-500 border-none outline-none"
+      className="rounded px-[24px] py-[12px] bg-teal-500 border-none outline-none flex items-center justify-center text-white gap-x-[10px]"
       data-testid="empty-screen-upload-pdf-btn"
       onClick={uploadPdf}
     >
-      Load PDF
+      <span>
+        <AiOutlineFilePdf size={25} />
+      </span>
+
+      <span>Upload PDF files</span>
     </button>
   </div>
 );

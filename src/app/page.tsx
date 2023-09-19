@@ -246,62 +246,63 @@ const App: React.FC = () => {
     <div className="m-[30px]] bg-indigo-500">
       {hiddenInputs}
 
-      <div className="p-[30px]">
-        <MenuBar
-          deletePdf={deletePdf}
-          openHelp={() => setHelpModalOpen(true)}
-          savePdf={handleSavePdf}
-          previewPdf={handlePreviewPdf}
-          addText={addText}
-          addImage={handleImageClick}
-          addDrawing={() => setDrawingModalOpen(true)}
-          savingPdfStatus={isSaving}
-          uploadNewPdf={handlePdfClick}
-          isPdfLoaded={!!file}
-        />
-      </div>
-
       {!file ? (
         <Empty loading={isUploading} uploadPdf={handlePdfClick} />
       ) : (
-        <div className="flex items-center justify-center gap-x-[50px]">
-          <div
-            className=""
-            // width={3}
-            // verticalAlign="middle"
-            // textAlign="left"
-          >
-            {isMultiPage && !isFirstPage && (
-              // <Button circular icon="angle left" onClick={previousPage} />
-              <button
-                className="w-[36px] h-[36px] rounded-full bg-gray-300 grid place-items-center"
-                onClick={previousPage}
-              >
-                <BiChevronLeft size={20} />
-              </button>
-            )}
+        <>
+          <div className="p-[30px]">
+            <MenuBar
+              deletePdf={deletePdf}
+              openHelp={() => setHelpModalOpen(true)}
+              savePdf={handleSavePdf}
+              previewPdf={handlePreviewPdf}
+              addText={addText}
+              addImage={handleImageClick}
+              addDrawing={() => setDrawingModalOpen(true)}
+              savingPdfStatus={isSaving}
+              uploadNewPdf={handlePdfClick}
+              isPdfLoaded={!!file}
+            />
           </div>
-          {/* <Grid.Column width={10}> */}
-          <div className="mt-[30px]">
-            {currentPage && (
-              <div
-                className="shadow-lg border"
-                // data-testid="page"
-                // compact
-                // stacked={isMultiPage && !isLastPage}
-              >
-                <Zoom
-                  dimensions={dimensions}
-                  updateDimensions={setDimensions}
-                  page={currentPage}
-                  pdfName={name}
-                  removeAttachment={remove}
-                  updateAttachment={update}
-                  pageDimensions={dimensions}
-                  attachments={pageAttachments}
-                />
 
-                {/* <div style={{ position: "relative" }}>
+          <div className="flex items-center justify-center gap-x-[50px]">
+            <div
+              className=""
+              // width={3}
+              // verticalAlign="middle"
+              // textAlign="left"
+            >
+              {isMultiPage && !isFirstPage && (
+                // <Button circular icon="angle left" onClick={previousPage} />
+                <button
+                  className="w-[36px] h-[36px] rounded-full bg-gray-300 grid place-items-center"
+                  onClick={previousPage}
+                >
+                  <BiChevronLeft size={20} />
+                </button>
+              )}
+            </div>
+            {/* <Grid.Column width={10}> */}
+            <div className="mt-[30px]">
+              {currentPage && (
+                <div
+                  className="shadow-lg border"
+                  // data-testid="page"
+                  // compact
+                  // stacked={isMultiPage && !isLastPage}
+                >
+                  <Zoom
+                    dimensions={dimensions}
+                    updateDimensions={setDimensions}
+                    page={currentPage}
+                    pdfName={name}
+                    removeAttachment={remove}
+                    updateAttachment={update}
+                    pageDimensions={dimensions}
+                    attachments={pageAttachments}
+                  />
+
+                  {/* <div style={{ position: "relative" }}>
                   <Page
                     dimensions={dimensions}
                     updateDimensions={setDimensions}
@@ -317,22 +318,23 @@ const App: React.FC = () => {
                     />
                   )}
                 </div> */}
-              </div>
-            )}
+                </div>
+              )}
+            </div>
+            {/* <Grid.Column width={3} verticalAlign="middle" textAlign="right"> */}
+            <div>
+              {isMultiPage && !isLastPage && (
+                // <Button circular icon="angle right" onClick={nextPage} />
+                <button
+                  className="w-[36px] h-[36px] rounded-full bg-gray-300 grid place-items-center"
+                  onClick={nextPage}
+                >
+                  <BiChevronRight size={20} />
+                </button>
+              )}
+            </div>
           </div>
-          {/* <Grid.Column width={3} verticalAlign="middle" textAlign="right"> */}
-          <div>
-            {isMultiPage && !isLastPage && (
-              // <Button circular icon="angle right" onClick={nextPage} />
-              <button
-                className="w-[36px] h-[36px] rounded-full bg-gray-300 grid place-items-center"
-                onClick={nextPage}
-              >
-                <BiChevronRight size={20} />
-              </button>
-            )}
-          </div>
-        </div>
+        </>
       )}
 
       {/* previewModal */}
