@@ -92,5 +92,4 @@ export const MenuBar: React.FC<Props> = ({
       ) : null}
     </div>
   );
-
 };

@@ -36,6 +36,7 @@ export const Text = ({
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
+    event.stopPropagation();
 
     if (mouseDown) {
       const { top, left } = getMovePosition(
@@ -57,6 +58,9 @@ export const Text = ({
   // console.log("update text attachment function ", updateTextAttachment);
 
   const handleMousedown = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    // event.stopPropagation();
+
     if (textMode !== TextMode.COMMAND) {
       return;
     }
