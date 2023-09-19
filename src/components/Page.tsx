@@ -1,3 +1,5 @@
+"use cient";
+
 import React, { useEffect, useRef, useState } from "react";
 
 interface Props {
@@ -37,12 +39,19 @@ export const Page = ({ page, dimensions, updateDimensions }: Props) => {
     // zoomElementRef.current.style.transform =
     //   "translate(" + pointX + "px, " + pointY + "px) scale(" + scale + ")";
 
+    // canvasRef.current.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+
     zoomElementRef.current.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
 
     // zoomElementRef.current.style.transform = " scale(" + scale + ")";
     // zoomElementRef.current.style.transformOrigin = `${pointX}px ${pointY}px`;
     // zoomElementRef.current.style.transform = `scale(${scale})`;
   }
+
+  const changeScroll = () => {
+    let style = document.body.style.overflow;
+    document.body.style.overflow = style === "hidden" ? "auto" : "hidden";
+  };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -66,10 +75,15 @@ export const Page = ({ page, dimensions, updateDimensions }: Props) => {
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault();
+    e.stopPropagation();
+
+    console.log("hell from on wheel ");
+
     const xsBeforeZoom = (e.clientX - pointX) / scale;
     const ysBeforeZoom = (e.clientY - pointY) / scale;
     const delta = e.deltaY || e.deltaX;
-    const zoomFactor = delta > 0 ? 1.2 : 1 / 1.2;
+    // const zoomFactor = delta > 0 ? 1.2 : 1 / 1.2;
+    const zoomFactor = delta > 0 ? 1.01 : 1 / 1.01;
     const newScale = scale * zoomFactor;
     const xsAfterZoom = (e.clientX - pointX) / newScale;
     const ysAfterZoom = (e.clientY - pointY) / newScale;
@@ -108,10 +122,36 @@ export const Page = ({ page, dimensions, updateDimensions }: Props) => {
     renderPage(page);
   }, [page, updateDimensions]);
 
+  // return (
+  //   <div
+  //   // ref={zoomElementRef}
+  //   // onMouseDown={handleMouseDown}
+  //   // onMouseUp={handleMouseUp}
+  //   // onMouseMove={handleMouseMove}
+  //   // onWheel={handleWheel}
+  //   // style={{ width: "100%", height: "100%", overflow: "hidden" }}
+  //   >
+  //     <canvas
+  //       // className="scale-[1.3]"
+
+  //       // ref={zoomElementRef}
+
+  //       ref={canvasRef}
+  //       onMouseDown={handleMouseDown}
+  //       onMouseUp={handleMouseUp}
+  //       onMouseMove={handleMouseMove}
+  //       width={width}
+  //       height={height}
+  //     />
+  //   </div>
+  // );
+
   return (
-    <div className="bg-red-500 p-[100px]">
+    <div className="bg-red-500 p-[100px] overflow-hidden">
       <div
         ref={zoomElementRef}
+        onMouseEnter={changeScroll}
+        onMouseLeave={changeScroll}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}

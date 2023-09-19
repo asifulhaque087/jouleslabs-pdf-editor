@@ -224,19 +224,22 @@ const App: React.FC = () => {
   // console.log("the  attachs are ", allPageAttachments);
 
   return (
-    <div className="m-[30px]">
+    <div className="m-[30px]] bg-indigo-500">
       {hiddenInputs}
-      <MenuBar
-        openHelp={() => setHelpModalOpen(true)}
-        savePdf={handleSavePdf}
-        previewPdf={handlePreviewPdf}
-        addText={addText}
-        addImage={handleImageClick}
-        addDrawing={() => setDrawingModalOpen(true)}
-        savingPdfStatus={isSaving}
-        uploadNewPdf={handlePdfClick}
-        isPdfLoaded={!!file}
-      />
+
+      <div className="p-[30px]">
+        <MenuBar
+          openHelp={() => setHelpModalOpen(true)}
+          savePdf={handleSavePdf}
+          previewPdf={handlePreviewPdf}
+          addText={addText}
+          addImage={handleImageClick}
+          addDrawing={() => setDrawingModalOpen(true)}
+          savingPdfStatus={isSaving}
+          uploadNewPdf={handlePdfClick}
+          isPdfLoaded={!!file}
+        />
+      </div>
 
       {!file ? (
         <Empty loading={isUploading} uploadPdf={handlePdfClick} />
