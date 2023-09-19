@@ -1,6 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+website: [link](https://nextjs.org/)
 
-## Getting Started
+# Features
+
+## Upload and Merge Multiple Files
+
+Upload multiples files will be merged into a single PDF file. This simplifies the process of managing and consolidating documents.
+
+## Zoom-In and Zoom-Out with Precision
+
+Zoom-in & zoom-out feature from cursor point. `Scroll down` for zoom-in and ` scroll up` for zoom out.
+
+## Attach Multi-Line Text and Resizeable Images
+
+Add multi-line text elements and image attachments. You can freely position and resize images by dragging their **top-left** corner.
+
+## Efficient File Storage
+
+Uploaded PDF files are securely stored in the public directory using Next.js API routing. For images, they are converted into base64 strings and stored in local storage. Please note that local storage has a limited capacity of 5MB, so be mindful of your image uploads.
+
+# Development Guide
+
+This development guide will tell you, how can you start with the application:
+
+### Hooks for Streamlined Development
+
+1. **useUploader:** This hook handles all file uploading-related tasks, ensuring a smooth and efficient process.
+2. **usePdf:** For PDF-related tasks, use this hook to manage file processing and merging.
+3. **useAttach:** When dealing with attachments (text and images), the useAttach hook simplifies attachment management.
+
+### Initialization Functions
+
+After uploading a file, two essential functions come into play:
+
+- **initialize function (usePdf):** Sets up the required states and handles PDF-related tasks.
+- **initAttach function (useAttach):** Manages attachment data and state. These functions are also called from useEffect to handle cached files inside the public directory and attachment data in local storage.
+
+### Develop
 
 First, run the development server:
 
@@ -8,27 +43,12 @@ First, run the development server:
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Drawbacks
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+By the way, it has some limitation also. It's essential to be aware of its limitations:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Attachment Responsiveness:** Zooming in or out affects the PDF content, but attachments (text and images) won't scale accordingly.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+2. **Image Upload Limit:** Keep in mind that local storage has a capacity limit of 5MB for image uploads. Be cautious when uploading large image files to avoid exceeding this limit.
