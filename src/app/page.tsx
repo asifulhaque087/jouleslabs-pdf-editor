@@ -20,6 +20,7 @@ import Preview from "@/components/Preview";
 import { readAsPDF } from "@/utils/asyncReader";
 import { getAsset, prepareAssets } from "@/utils/prepareAssets";
 import { PDFDocument, StandardFonts, degrees, rgb } from "pdf-lib";
+import Zoom from "@/components/Zoom";
 
 const App: React.FC = () => {
   const [helpModalOpen, setHelpModalOpen] = useState(false);
@@ -270,7 +271,18 @@ const App: React.FC = () => {
                 // compact
                 // stacked={isMultiPage && !isLastPage}
               >
-                <div style={{ position: "relative" }}>
+                <Zoom
+                  dimensions={dimensions}
+                  updateDimensions={setDimensions}
+                  page={currentPage}
+                  pdfName={name}
+                  removeAttachment={remove}
+                  updateAttachment={update}
+                  pageDimensions={dimensions}
+                  attachments={pageAttachments}
+                />
+
+                {/* <div style={{ position: "relative" }}>
                   <Page
                     dimensions={dimensions}
                     updateDimensions={setDimensions}
@@ -283,10 +295,9 @@ const App: React.FC = () => {
                       updateAttachment={update}
                       pageDimensions={dimensions}
                       attachments={pageAttachments}
-                      // attachments={allPageAttachments[pageIndex]}
                     />
                   )}
-                </div>
+                </div> */}
               </div>
             )}
           </div>
@@ -305,17 +316,10 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* {isPreview && ( */}
-      <div className="py-[100px]">
-        {/* <div>this is preview page</div> */}
-        <Preview previewRef={previewRef} />
-      </div>
-      {/* )} */}
-
       {/* previewModal */}
 
       <div
-        className={`fixed top-0 bottom-0 left-0 right-0 bg-green-500 ${
+        className={`fixed top-0 bottom-0 left-0 right-0 bg-indigo-500 ${
           isPreview ? "block" : "hidden"
         } `}
       >

@@ -44,6 +44,7 @@ export const Image = ({
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
+
     setMouseDown(true);
     setOperation(DragActions.MOVE);
     const directions = event.currentTarget.dataset.direction;
@@ -55,6 +56,7 @@ export const Image = ({
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
+    event.stopPropagation();
 
     if (mouseDown) {
       const { top, left } = getMovePosition(
