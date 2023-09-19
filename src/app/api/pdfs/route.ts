@@ -1,4 +1,4 @@
-import { writeFile } from "fs/promises";
+import { writeFile, unlink } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 
 // export const GET = async (req: Request, res: Response) => {
@@ -26,4 +26,16 @@ export async function POST(request: NextRequest) {
   console.log(`open ${path} to see the uploaded file`);
 
   return NextResponse.json({ success: true });
+}
+
+export async function DELETE(request: NextRequest) {
+  const path = `${process.cwd()}/public/cache.pdf`;
+
+  try {
+    await unlink(path);
+    console.log(`File ${path} removed successfully!`);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error(`Error removing file ${path}: ${error}`);
+  }
 }
