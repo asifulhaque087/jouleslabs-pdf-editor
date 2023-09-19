@@ -55,12 +55,14 @@ export async function save(
         const { x, y, text, lineHeight, size, fontFamily, width } =
           object as TextAttachment;
         const pdfFont = await pdfDoc.embedFont(fontFamily);
+
         return () =>
           page.drawText(text, {
             maxWidth: width,
             font: pdfFont,
             size,
-            lineHeight,
+            // lineHeight,
+            lineHeight: 15,
             x,
             y: pageHeight - size! - y,
           });
@@ -204,41 +206,6 @@ export async function saveAndPreview(
             x,
             y: pageHeight - size! - y,
           });
-
-        // const { x, y, text, lineHeight, size, fontFamily, width } =
-        //   object as TextAttachment;
-
-        // try {
-        //   // const pdfFont = await pdfDoc.embedFont(fontFamily);
-        //   const pdfFont = await pdfDoc.embedFont("Helvetica"); // You can replace "Helvetica" with a suitable font name
-
-        //   const textWidth = pdfFont.widthOfTextAtSize(text, size);
-        //   const textHeight = pdfFont.heightAtSize(size);
-
-        //   return () => {
-        //     const options = {
-        //       font: pdfFont,
-        //       size,
-        //       x,
-        //       y: pageHeight - y - textHeight, // Adjust y position
-        //     };
-
-        //     if (textWidth > width) {
-        //       // Text exceeds the specified width, so break it into multiple lines
-        //       const lines = pdfDoc.splitTextToSize(text, width, {
-        //         fontSize: size,
-        //         font: pdfFont,
-        //       });
-        //       page.drawText(lines, options);
-        //     } else {
-        //       // Draw the text as is
-        //       page.drawText(text, options);
-        //     }
-        //   };
-        // } catch (e) {
-        //   console.log("Failed to embed font or draw text.", e);
-        //   throw e;
-        // }
       } else if (object.type === "drawing") {
         const { x, y, path, scale, stroke, strokeWidth } =
           object as DrawingAttachment;
