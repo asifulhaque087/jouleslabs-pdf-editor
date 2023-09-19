@@ -7,6 +7,7 @@ import { Pdf } from "./usePdf";
 import { AttachmentTypes } from "../entities";
 import toast from "react-hot-toast";
 import { mergePdfFiles } from "@/utils/pdf";
+import axios from "axios";
 
 type ActionEvent<T> = React.TouchEvent<T> | React.MouseEvent<T>;
 
@@ -82,6 +83,8 @@ export const useUploader = ({
   const [isUploading, setIsUploading] = useState(false);
   const inputRef = createRef<HTMLInputElement>();
 
+  const [progress, setProgress] = useState(0);
+
   const onClick = (event: ActionEvent<HTMLInputElement>) => {
     event.currentTarget.value = "";
   };
@@ -95,27 +98,92 @@ export const useUploader = ({
       input.click();
     }
   };
-
   const saveFile = async (file: File) => {
-    // e.preventDefault();
     if (!file) return;
 
     try {
       const data = new FormData();
       data.set("file", file);
 
-      const res = await fetch("/api/pdfs", {
-        method: "POST",
-        body: data,
+      const response = await axios.post(`/api/pdfs`, data, {
+        onUploadProgress: (data) => {
+          if (data.total !== null && data.total !== undefined) {
+            setProgress(Math.round((data.loaded / data.total) * 100));
+            // console.log(
+            //   "the progress is ",
+            //   Math.round((data.loaded / data.total) * 100)
+            // );
+          } else {
+            // Handle the case where data.total is undefined
+            // You can choose to ignore it or handle it differently
+          }
+        },
       });
-      // handle the error
-      if (!res.ok) throw new Error(await res.text());
-      localStorage.removeItem("attachs");
+
+      // Check if the status code indicates success (e.g., 200-299)
+      if (response.status >= 200 && response.status < 300) {
+        localStorage.removeItem("attachs");
+        // Handle success here
+      } else {
+        // Handle other status codes (e.g., error responses)
+        const errorText = response.data; // Use response.data to get the response text
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Response: ${errorText}`
+        );
+      }
     } catch (e: any) {
       // Handle errors here
       console.error(e);
     }
   };
+
+  // const saveFile = async (file: File) => {
+  //   // e.preventDefault();
+  //   if (!file) return;
+
+  //   try {
+  //     const data = new FormData();
+  //     data.set("file", file);
+
+  //     const res = axios.post(`/api/pdfs`, data, {
+  //       onUploadProgress: (data) => {
+  //         setProgress(Math.round((data.loaded / data?.total) * 100));
+  //       },
+  //     });
+
+  //     // const res = await fetch("/api/pdfs", {
+  //     //   method: "POST",
+  //     //   body: data,
+  //     // });
+  //     // handle the error
+  //     if (!res.ok) throw new Error(await res.text());
+  //     localStorage.removeItem("attachs");
+  //   } catch (e: any) {
+  //     // Handle errors here
+  //     console.error(e);
+  //   }
+  // };
+
+  // const saveFile = async (file: File) => {
+  //   // e.preventDefault();
+  //   if (!file) return;
+
+  //   try {
+  //     const data = new FormData();
+  //     data.set("file", file);
+
+  //     const res = await fetch("/api/pdfs", {
+  //       method: "POST",
+  //       body: data,
+  //     });
+  //     // handle the error
+  //     if (!res.ok) throw new Error(await res.text());
+  //     localStorage.removeItem("attachs");
+  //   } catch (e: any) {
+  //     // Handle errors here
+  //     console.error(e);
+  //   }
+  // };
 
   const removeFile = async () => {
     try {
@@ -228,6 +296,8 @@ export const useUploader = ({
     inputRef,
     isUploading,
     handleClick,
-    removeFile
+    removeFile,
+    progress,
+    setProgress,
   };
 };
