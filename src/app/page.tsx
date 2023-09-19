@@ -109,6 +109,7 @@ const App: React.FC = () => {
     onClick,
     upload: uploadPdf,
     pdfUpload,
+    removeFile,
   } = useUploader({
     use: UploadTypes.PDF,
     afterUploadPdf: initializePageAndAttachments,
@@ -124,7 +125,9 @@ const App: React.FC = () => {
     afterUploadAttachment: addAttachment,
   });
 
-  const deletePdf = () => {
+  const deletePdf = async () => {
+    await removeFile();
+
     localStorage.clear();
     resetPdf();
     initAttachs({
@@ -174,6 +177,10 @@ const App: React.FC = () => {
     // const filePath = "/merged.pdf";
     const filePath = "/cache.pdf";
     const response = await fetch(filePath);
+
+    // console.log(response)
+
+    if (!response.ok) return;
 
     const fileBlob = await response.blob();
 
