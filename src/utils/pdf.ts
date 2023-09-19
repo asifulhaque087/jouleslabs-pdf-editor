@@ -141,8 +141,7 @@ export async function saveAndPreview(
   pdfFile: File,
   objects: Attachments[],
   name: string,
-  pdfViewer: HTMLIFrameElement,
-  pageRefs: React.RefObject<HTMLTextAreaElement>[]
+  pdfViewer: HTMLIFrameElement
 ) {
   const PDFLib = await getAsset("PDFLib");
   const download = await getAsset("download");
@@ -154,8 +153,6 @@ export async function saveAndPreview(
     embedPdf: (arg0: any) => [any] | PromiseLike<[any]>;
     save: () => any;
   };
-
-  console.log("the refs are ", pageRefs);
 
   try {
     pdfDoc = await PDFLib.PDFDocument.load(await readAsArrayBuffer(pdfFile));
