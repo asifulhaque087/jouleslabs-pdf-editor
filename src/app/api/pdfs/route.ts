@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   // With the file data in the buffer, you can do whatever you want with it.
   // For this, we'll just write it to the filesystem in a new location
   // const path = `/tmp/${file.name}`;
-  const path = `${process.cwd()}/public/hello.pdf`;
+  const path = `${process.cwd()}/public/cache.pdf`;
   await writeFile(path, buffer);
   console.log(`open ${path} to see the uploaded file`);
 
