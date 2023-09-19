@@ -1,4 +1,4 @@
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect } from "react";
 import { Dimmer } from "semantic-ui-react";
 import { Div } from "../ui/components/Div";
 import { ConfirmContent } from "./ConfirmContent";
@@ -38,6 +38,8 @@ export const Image: React.FC<Props> = ({
   deleteImage,
   onClick,
 }) => {
+
+
   return (
     <div
       onMouseDown={handleMouseDown}

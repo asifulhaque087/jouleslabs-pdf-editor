@@ -112,14 +112,14 @@ const Zoom = ({
 
   return (
     <div
-      ref={zoomElementRef}
-      onMouseEnter={changeScroll}
-      onMouseLeave={changeScroll}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
-      onWheel={handleWheel}
-      style={{ width: "100%", height: "100%", overflow: "hidden" }}
+    // ref={zoomElementRef}
+    // onMouseEnter={changeScroll}
+    // onMouseLeave={changeScroll}
+    // onMouseDown={handleMouseDown}
+    // onMouseUp={handleMouseUp}
+    // onMouseMove={handleMouseMove}
+    // onWheel={handleWheel}
+    // style={{ width: "100%", height: "100%", overflow: "hidden" }}
     >
       <div style={{ position: "relative" }}>
         <Page

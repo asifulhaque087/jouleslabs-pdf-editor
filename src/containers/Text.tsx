@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Text as Component } from "../components/Text";
 import { getMovePosition } from "../utils/helpers";
 import { DragActions, TextMode } from "../entities";
@@ -25,6 +25,9 @@ export const Text = ({
   updateTextAttachment,
 }: TextAttachment & Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [newWidth, setNewWidth] = useState(width);
+  const [newHeight, setNewHeight] = useState(height);
   const [content, setContent] = useState(text || "");
   const [mouseDown, setMouseDown] = useState(false);
   const [positionTop, setPositionTop] = useState(y);
@@ -90,9 +93,19 @@ export const Text = ({
         pageHeight
       );
 
+      // updateTextAttachment({
+      //   x: left,
+      //   y: top,
+      // });
+      // console.log(
+      //   "the ssssss swwww ",
+      //   textAreaRef.current.getBoundingClientRect().width
+      // );
+
       updateTextAttachment({
         x: left,
         y: top,
+        // width: textAreaRef.current.getBoundingClientRect().width,
       });
     }
 
@@ -144,12 +157,93 @@ export const Text = ({
     }
   };
 
+  const toggleEditModeTextArea = () => {
+    const input = textAreaRef.current;
+    const mode =
+      textMode === TextMode.COMMAND ? TextMode.INSERT : TextMode.COMMAND;
+
+    setTextMode(mode);
+
+    if (input && mode === TextMode.INSERT) {
+      input.focus();
+      input.select();
+    } else {
+      prepareTextAndUpdate();
+    }
+  };
+
   const onChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
     setContent(value);
   };
 
+  const onChangeTextArea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log("I am from vaue content ", event.currentTarget.value);
+    const value = event.currentTarget.value;
+    setContent(value);
+  };
+
   // console.log("from middle ", positionLeft, positionTop)
+
+  // useEffect(() => {
+  //   if (textAreaRef)
+  //     // console.log("the text ref is ")
+  // }, [textAreaRef]);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (textAreaRef.current) {
+  //       // setHeight(textAreaRef.current.clientHeight);
+  //       // setWidth(textAreaRef.current.clientWidth);
+  //       console.log("te asldfa ", textAreaRef.current.clientWidth);
+  //     }
+  //   };
+
+  //   // Attach event listeners for resizing
+  //   if (textAreaRef.current) {
+  //     console.log("hola hola ");
+  //     textAreaRef.current.addEventListener("resize", handleResize);
+  //   }
+
+  //   // Clean up event listener when the component unmounts
+  //   return () => {
+  //     if (textAreaRef.current) {
+  //       textAreaRef.current.removeEventListener("resize", handleResize);
+  //     }
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const textArea = textAreaRef.current;
+
+    if (!textArea) return;
+
+    // Initialize dimensions
+    // setHeight(textArea.clientHeight);
+    // setWidth(textArea.clientWidth);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        console.log("height is ", entry.target.clientHeight);
+        console.log("width is", entry.target.clientWidth);
+        setNewHeight(entry.target.clientHeight);
+        setNewWidth(entry.target.clientWidth);
+
+        updateTextAttachment({
+          width: entry.target.clientWidth,
+          height: entry.target.clientHeight,
+          // width: textAreaRef.current.getBoundingClientRect().width,
+        });
+      }
+    });
+
+    resizeObserver.observe(textArea);
+
+    return () => {
+      resizeObserver.unobserve(textArea);
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   return (
     <Component
@@ -160,15 +254,22 @@ export const Text = ({
       size={size}
       lineHeight={lineHeight}
       inputRef={inputRef}
+      textAreaRef={textAreaRef}
+      onChangeTextArea={onChangeTextArea}
       fontFamily={fontFamily}
       positionTop={positionTop}
       onChangeText={onChangeText}
       positionLeft={positionLeft}
       handleMouseUp={handleMouseUp}
       toggleEditMode={toggleEditMode}
+      toggleEditModeTextArea={toggleEditModeTextArea}
       handleMouseOut={handleMouseOut}
       handleMouseDown={handleMousedown}
       handleMouseMove={handleMouseMove}
+      setNewHeight={setNewHeight}
+      setNewWidth={setNewWidth}
+      pageHeight={pageHeight}
+      pageWidth={pageWidth}
     />
   );
 };
