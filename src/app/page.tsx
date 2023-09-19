@@ -110,6 +110,8 @@ const App: React.FC = () => {
     upload: uploadPdf,
     pdfUpload,
     removeFile,
+    progress,
+    setProgress,
   } = useUploader({
     use: UploadTypes.PDF,
     afterUploadPdf: initializePageAndAttachments,
@@ -129,6 +131,7 @@ const App: React.FC = () => {
     await removeFile();
 
     localStorage.clear();
+    setProgress(0);
     resetPdf();
     initAttachs({
       allPageAttachments: [],
@@ -247,7 +250,7 @@ const App: React.FC = () => {
       {hiddenInputs}
 
       {!file ? (
-        <Empty loading={isUploading} uploadPdf={handlePdfClick} />
+        <Empty progres={progress} uploadPdf={handlePdfClick} />
       ) : (
         <>
           <div className="p-[30px]">
