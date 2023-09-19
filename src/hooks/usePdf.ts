@@ -28,6 +28,17 @@ export const usePdf = () => {
 
   const setDimensionsHandler = useCallback(setDimensions, [setDimensions]);
 
+  const resetPdf = () => {
+    setName("");
+    setPageIndex(-1);
+    setDimensions(undefined);
+    setFile(undefined);
+    setPages([]);
+    setIsMultiPage(false);
+    setIsFirstPage(false);
+    setIsLastPage(false);
+  };
+
   const nextPage = () => {
     const newPageIndex = pageIndex + 1;
     setPageIndex(pageIndex + 1);
@@ -100,5 +111,6 @@ export const usePdf = () => {
     isLastPage,
     isSaving,
     previewRef,
+    resetPdf,
   };
 };
