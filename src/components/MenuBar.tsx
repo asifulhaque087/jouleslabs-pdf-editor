@@ -46,6 +46,24 @@ export const MenuBar: React.FC<Props> = ({
   //   <Icon name="question circle outline" />
   // </Menu.Item>
 
+  const confirmUpload = () => {
+    const yes = window.confirm(
+      "Are you sure, your current file will be deleted"
+    );
+
+    if (yes) {
+      return uploadNewPdf();
+    }
+  };
+
+  const confirmDelete = () => {
+    const yes = window.confirm("Are you sure, want to delete this file");
+
+    if (yes) {
+      return deletePdf();
+    }
+  };
+
   const tabs = [
     {
       title: "Add text",
@@ -74,12 +92,13 @@ export const MenuBar: React.FC<Props> = ({
 
     {
       title: "upload new",
-      handleClick: uploadNewPdf,
+      handleClick: confirmUpload,
+      // handleClick: uploadNewPdf,
     },
 
     {
       title: "Delete pdf",
-      handleClick: deletePdf,
+      handleClick: confirmDelete,
     },
 
     {
