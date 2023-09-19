@@ -10,7 +10,7 @@ interface IToolsTab {
 
 const ToolsTab = ({ activeIndex, setActiveIndex, tabs }: IToolsTab) => {
   return (
-    <div className="w-full gap-x-[20px] flex items-center justify-center bg-gray-100 py-[10px] px-[18px]  rounded-[10px] ">
+    <div className="w-min mx-auto gap-x-[20px] flex items-center justify-center bg-gray-100 py-[10px] px-[18px]  rounded-[10px] ">
       {tabs.map((tab, i) => (
         <span
           key={i}
