@@ -96,37 +96,6 @@ export const useUploader = ({
     }
   };
 
-  // const upload = async (
-  //   event: React.ChangeEvent<HTMLInputElement> & { dataTransfer?: DataTransfer }
-  // ) => {
-  //   if (!isUploading) {
-  //     return;
-  //   }
-
-  //   const files: FileList | undefined =
-  //     event.currentTarget.files ||
-  //     (event.dataTransfer && event.dataTransfer.files);
-  //   if (!files) {
-  //     setIsUploading(false);
-  //     return;
-  //   }
-
-  //   const file = files[0];
-
-  //   const result = await handlers[use](file);
-
-  //   if (use === UploadTypes.PDF && afterUploadPdf) {
-  //     afterUploadPdf(result as Pdf);
-  //   }
-
-  //   if (use === UploadTypes.IMAGE && afterUploadAttachment) {
-  //     console.log("===> was this also called");
-  //     afterUploadAttachment(result as ImageAttachment);
-  //   }
-  //   setIsUploading(false);
-  //   return;
-  // };
-
   const saveFile = async (file: File) => {
     // e.preventDefault();
     if (!file) return;
@@ -141,7 +110,7 @@ export const useUploader = ({
       });
       // handle the error
       if (!res.ok) throw new Error(await res.text());
-      // localStorage.removeItem("attachs");
+      localStorage.removeItem("attachs");
     } catch (e: any) {
       // Handle errors here
       console.error(e);

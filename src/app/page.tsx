@@ -79,7 +79,7 @@ const App: React.FC = () => {
       // pageAttachments: attachs?.pageAttachments || [],
       // pageIndex: attachs?.pageIndex || -1,
 
-      pageIndex: attachs?.pageIndex || -1,
+      pageIndex: attachs?.pageIndex || 0,
       allPageAttachments:
         attachs?.allPageAttachments.map((page) => {
           return page.map((attach) => {
