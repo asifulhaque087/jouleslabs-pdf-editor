@@ -178,10 +178,10 @@ const App: React.FC = () => {
 
   const modifyPdf = async () => {
     // const filePath = "/merged.pdf";
-    const filePath = "/cache.pdf";
+    const filePath = "http://localhost:3003/cache.pdf";
     const response = await fetch(filePath);
 
-    // console.log(response)
+    console.log(response);
 
     if (!response.ok) return;
 
