@@ -2,7 +2,7 @@ website (vercel) : [jouleslabs-pdf-editor](http://jouleslabs-pdf-editor.asifulmr
 
 In **vercel**, File is storing in vercel because of serverless function. So after reload pdf will be lost
 
-website (vps) : [jouleslabs-pdf-editor](http://jouleslabs-pdf-editor.asifulmridul.xyz/)
+website (vps) : [jouleslabs-pdf-editor](https://jouleslabs-pdf-editor.vercel.app/)
 
 In **vps**, storing file is working fine. But it can't be done on production server till now for me, though I think it can be done because everything working fine on localhost. However, after reload pdf will be preserved. But application loads very slow.
 
