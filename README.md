@@ -5,7 +5,7 @@ source-code : [jouleslabs-pdf-editor](https://github.com/asifulhaque087/joulesla
 
 ## Upload and Merge Multiple Files
 
-Upload multiples files will be merged into a single PDF file. This simplifies the process of managing and consolidating documents.
+Upload multiple files will be merged into a single PDF file. This simplifies the process of managing and consolidating documents.
 
 ## Zoom-In and Zoom-Out with Precision
 
@@ -48,6 +48,6 @@ yarn dev
 
 # Drawbacks
 
-By the way, it has some limitation also. It's essential to be aware of its limitations:
+By the way, it has some limitations also. It's essential to be aware of its limitations:
 
 1. **Image Upload Limit:** Keep in mind that local storage has a capacity limit of 5MB for image uploads. Be cautious when uploading large image files to avoid exceeding this limit.
