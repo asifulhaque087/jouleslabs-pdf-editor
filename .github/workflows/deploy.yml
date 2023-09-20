@@ -1,0 +1,80 @@
+name: Deploy
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [main]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Cloning or pulling github repository using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.MACHINE_PORT }}
+          script: |
+            cd /var/www/projects/
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh  
+
+            if [ -d "jouleslabs-pdf-editor" ]; then
+              cd jouleslabs-pdf-editor/
+              git pull
+
+            else
+              git clone git@jouleslabs-pdf-editor:asifulhaque087/jouleslabs-pdf-editor.git jouleslabs-pdf-editor
+            fi
+
+      - name: "Create env file"
+        run: |
+          echo "TEST=test" >> .env
+
+      - name: Copy .env file to server using SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: ".env"
+          target: /var/www/projects/jouleslabs-pdf-editor/
+
+      - name: Start server using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.MACHINE_PORT }}
+          script: |
+
+            cd /var/www/projects/jouleslabs-pdf-editor/
+
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh  
+
+            npm install
+            npm run build
+
+            # Replace 'your_app_name' with the actual name of your PM2 application
+            APP_NAME="jouleslabs-pdf-editor"
+
+            # Get the status of the PM2 application
+            STATUS=$(pm2 show $APP_NAME | grep "status" | awk '{print $4}')
+
+            # Check the status and run corresponding commands
+            if [ "$STATUS" == "online" ]; then
+                pm2 reload jouleslabs-pdf-editor 
+            else
+                pm2 start npm --name jouleslabs-pdf-editor -- run start
+              # pm2 save
+            fi
