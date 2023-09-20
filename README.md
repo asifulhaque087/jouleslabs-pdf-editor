@@ -1,4 +1,4 @@
-website : [jouleslabs-pdf-editor](https://jouleslabs-pdf-editor.asifulmridul.xyz/)   
+website : [jouleslabs-pdf-editor](https://jouleslabs-pdf-editor.asifulmridul.xyz/)  
 source-code : [jouleslabs-pdf-editor](https://github.com/asifulhaque087/jouleslabs-pdf-editor)
 
 # Features
@@ -50,6 +50,4 @@ yarn dev
 
 By the way, it has some limitation also. It's essential to be aware of its limitations:
 
-1. **Attachment Responsiveness:** Zooming in or out affects the PDF content, but attachments (text and images) won't scale accordingly.
-
-2. **Image Upload Limit:** Keep in mind that local storage has a capacity limit of 5MB for image uploads. Be cautious when uploading large image files to avoid exceeding this limit.
+1. **Image Upload Limit:** Keep in mind that local storage has a capacity limit of 5MB for image uploads. Be cautious when uploading large image files to avoid exceeding this limit.
