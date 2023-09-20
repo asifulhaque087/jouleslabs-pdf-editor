@@ -60,8 +60,8 @@ export const usePdf = () => {
     setPages(_pages);
     setPageIndex(pageIndex);
     setIsMultiPage(multi);
-    // setIsFirstPage(true);
-    // setIsLastPage(_pages.length === 1);
+    setIsFirstPage(true);
+    setIsLastPage(_pages.length === 1);
   };
 
   const savePdf = async (attachments: Attachments[]) => {

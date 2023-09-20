@@ -82,8 +82,8 @@ const App: React.FC = () => {
 
       pageIndex: attachs?.pageIndex || 0,
       allPageAttachments:
-        attachs?.allPageAttachments.map((page) => {
-          return page.map((attach) => {
+        attachs?.allPageAttachments.map((page: any) => {
+          return page.map((attach: any) => {
             if (attach.type === "image") {
               const modifiedFile = base64StringToFile(attach.file, "img1");
               return { ...attach, file: modifiedFile };
@@ -92,7 +92,7 @@ const App: React.FC = () => {
           });
         }) || Array(numberOfPages).fill([]),
       pageAttachments:
-        attachs?.pageAttachments.map((attach) => {
+        attachs?.pageAttachments.map((attach: any) => {
           if (attach.type === "image") {
             const modifiedFile = base64StringToFile(attach.file, "img2");
             return { ...attach, file: modifiedFile };

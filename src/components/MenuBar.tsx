@@ -75,10 +75,10 @@ export const MenuBar: React.FC<Props> = ({
       handleClick: addImage,
     },
 
-    {
-      title: "Add drawing",
-      handleClick: addDrawing,
-    },
+    // {
+    //   title: "Add drawing",
+    //   handleClick: addDrawing,
+    // },
 
     {
       title: "preview",
